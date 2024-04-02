@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(
-    QuizMaba(),
-  );
+  runApp(MyApp());
 }
 
-class QuizMaba extends StatelessWidget {
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.grey.shade400,
-        body: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
-            child: HalamanQuiz(),
-          ),
+        appBar: AppBar(
+          title: Text('Quiz App'),
         ),
+        body: HalamanQuiz(),
       ),
     );
   }
@@ -95,7 +90,7 @@ class _HalamanQuizState extends State<HalamanQuiz> {
   int nomorPertanyaan = 0;
   int skor = 0;
 
-  void _pilihJawaban(String jawaban) {
+  void pilihJawaban(String jawaban) {
     setState(() {
       if (jawaban == bankSoal[nomorPertanyaan].kunciJawaban) {
         skorMaba.add(
@@ -155,45 +150,50 @@ class _HalamanQuizState extends State<HalamanQuiz> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        Expanded(
-          flex: 5,
+        Flexible(
           child: Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Column(
-              children: [
-                Text(
-                  bankSoal[nomorPertanyaan].pertanyaan,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 30.0,
-                    color: Colors.black87,
+            padding: EdgeInsets.all(25.0),
+            child: Container(
+              color: Colors.white, // Warna latar belakang putih
+              padding: EdgeInsets.all(25.0), // Padding di sekitar teks pertanyaan
+              child: Column(
+                children: [
+                  Flexible(
+                    child: Text(
+                      bankSoal[nomorPertanyaan].pertanyaan,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 30.0,
+                        color: Colors.black87,
+                      ),
+                    ),
                   ),
-                ),
-                SizedBox(height: 6),
-                Image(
-                  image: bankSoal[nomorPertanyaan].gambar,
-                  fit: BoxFit.contain,
-                ),
-              ],
+                  SizedBox(height: 6),
+                  Image.asset(
+                    bankSoal[nomorPertanyaan].gambar,
+                    width: 150, // Sesuaikan ukuran gambar di sini
+                    height: 150, // Sesuaikan ukuran gambar di sini
+                    fit: BoxFit.contain,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
         Expanded(
-          child: GridView.count(
-            crossAxisCount: 2, // Menentukan jumlah kolom
-            childAspectRatio: 3.0, // Mengatur rasio aspek setiap item
+          child: Column(
             children: bankSoal[nomorPertanyaan].jawaban.map((jawaban) {
               return Padding(
-                padding: EdgeInsets.all(15.0),
+                padding: EdgeInsets.symmetric(vertical: 5.0),
                 child: ElevatedButton(
                   onPressed: () {
-                    _pilihJawaban(jawaban);
+                    pilihJawaban(jawaban);
                   },
                   child: Text(
                     jawaban,
                     style: TextStyle(
+                      fontSize: 20.0,
                       color: Colors.black,
-                      fontSize: 15.0,
                     ),
                   ),
                 ),
@@ -201,9 +201,7 @@ class _HalamanQuizState extends State<HalamanQuiz> {
             }).toList(),
           ),
         ),
-        Row(
-          children: skorMaba,
-        )
+        // Bagian lain dari kode tidak perlu dimodifikasi
       ],
     );
   }
@@ -213,7 +211,7 @@ class Pertanyaan {
   String pertanyaan;
   List<String> jawaban;
   String kunciJawaban;
-  AssetImage gambar;
+  String gambar;
 
-  Pertanyaan(this.pertanyaan, this.jawaban, this.kunciJawaban, this.gambar);
+  Pertanyaan(this.pertanyaan, this.jawaban, this.kunciJawaban,this.gambar);
 }
