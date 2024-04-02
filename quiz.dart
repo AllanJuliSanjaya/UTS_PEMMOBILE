@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math'; // Import library dart:math untuk menggunakan fungsi pengacakan
 
 void main() {
   runApp(MyApp());
@@ -30,7 +31,7 @@ class _HalamanQuizState extends State<HalamanQuiz> {
       'Berapa jumlah prodi di fakultas vokasi?',
       ['A. 10', 'B. 20', 'C. 30', 'D. 40'],
       'A. 10',
-      ('images/vokasi.jpg'),
+      'images/vokasi.jpg',
     ),
     Pertanyaan(
       'Di kota mana Unesa berada?',
@@ -63,13 +64,13 @@ class _HalamanQuizState extends State<HalamanQuiz> {
       ('images/ramadhan.png'),
     ),
     Pertanyaan(
-      'Berapa total sks D4 MI 2022?',
+      'Berapa total sks D4 Manajemen Informatika?',
       ['A. 144', 'B. 120', 'C. 150', 'D. 18'],
       'A. 144',
       ('images/manajemeninformatika.png'),
     ),
     Pertanyaan(
-      'Gedung mana yang sering digunakan praktik mengajar untuk mahasiswa Manajemen informatika 2022?',
+      'Gedung mana yang sering digunakan praktik mengajar untuk mahasiswa Manajemen Informatika?',
       ['A. K2', 'B. K10', 'C. A10', 'D. K4'],
       'A. K2',
       ('images/gedung.png'),
@@ -81,14 +82,24 @@ class _HalamanQuizState extends State<HalamanQuiz> {
       ('images/fip.jpg'),
     ),
     Pertanyaan(
-      'Bapak Dosen I Gde Agung Sri Sidhimantra, S.Kom., M.Kom. mengampu mata kuliah apa?',
-      ['A. Kewarganegaraan', 'B. Basis Data', 'C. ALPRO', 'D. PemGame'],
+      'Bapak Dosen I Gde Agung Sri Sidhimantra, S.Kom., M.Kom. di Manajemen Informatika mengampu mata kuliah apa?',
+      ['A. Kewarganegaraan', 'B. Basis Data', 'C. Kewirausahaan', 'D. PemGame'],
       'A. PemWeb',
       ('images/dosen.jpg'),
     ),
   ];
   int nomorPertanyaan = 0;
   int skor = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _acakSoal(); // Panggil fungsi pengacakan soal saat inisialisasi halaman
+  }
+
+  void _acakSoal() {
+    bankSoal.shuffle(Random()); // Mengacak urutan pertanyaan
+  }
 
   void pilihJawaban(String jawaban) {
     setState(() {
@@ -133,6 +144,7 @@ class _HalamanQuizState extends State<HalamanQuiz> {
                   nomorPertanyaan = 0;
                   skor = 0;
                   skorMaba.clear();
+                  _acakSoal(); // Panggil fungsi pengacakan soal kembali setelah permainan selesai
                 });
                 Navigator.of(context).pop();
               },
@@ -147,61 +159,56 @@ class _HalamanQuizState extends State<HalamanQuiz> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        Flexible(
-          child: Padding(
-            padding: EdgeInsets.all(25.0),
-            child: Container(
-              color: Colors.white, // Warna latar belakang putih
-              padding: EdgeInsets.all(25.0), // Padding di sekitar teks pertanyaan
-              child: Column(
-                children: [
-                  Flexible(
-                    child: Text(
-                      bankSoal[nomorPertanyaan].pertanyaan,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 30.0,
-                        color: Colors.black87,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 6),
-                  Image.asset(
-                    bankSoal[nomorPertanyaan].gambar,
-                    width: 150, // Sesuaikan ukuran gambar di sini
-                    height: 150, // Sesuaikan ukuran gambar di sini
-                    fit: BoxFit.contain,
-                  ),
-                ],
-              ),
+        Container(
+          color: Colors.white,
+          padding: EdgeInsets.all(25.0),
+          child: Text(
+            bankSoal[nomorPertanyaan].pertanyaan,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 25.0,
+              color: Colors.black87,
             ),
           ),
         ),
-        Expanded(
-          child: Column(
-            children: bankSoal[nomorPertanyaan].jawaban.map((jawaban) {
-              return Padding(
-                padding: EdgeInsets.symmetric(vertical: 5.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    pilihJawaban(jawaban);
-                  },
-                  child: Text(
-                    jawaban,
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      color: Colors.black,
-                    ),
+        SizedBox(height: 6),
+        Image.asset(
+          bankSoal[nomorPertanyaan].gambar,
+          width: 150, // Sesuaikan ukuran gambar di sini
+          height: 150, // Sesuaikan ukuran gambar di sini
+          fit: BoxFit.contain,
+        ),
+        SizedBox(height: 10),
+        Column(
+          children: bankSoal[nomorPertanyaan].jawaban.map((jawaban) {
+            return Padding(
+              padding: EdgeInsets.symmetric(vertical: 5.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  pilihJawaban(jawaban);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  fixedSize: Size(200, 50), // Ukuran button tetap
+                ),
+                child: Text(
+                  jawaban,
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.black,
                   ),
                 ),
-              );
-            }).toList(),
-          ),
+              ),
+            );
+          }).toList(),
         ),
-        // Bagian lain dari kode tidak perlu dimodifikasi
+        SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: skorMaba, // Menampilkan hasil jawaban
+        ),
       ],
     );
   }
