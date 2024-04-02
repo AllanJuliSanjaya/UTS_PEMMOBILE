@@ -190,8 +190,8 @@ class _HalamanQuizState extends State<HalamanQuiz> {
                   pilihJawaban(jawaban);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  fixedSize: Size(200, 50), // Ukuran button tetap
+                  backgroundColor: Colors.lightBlue,
+                  fixedSize: Size(400, 50), // Ukuran button tetap
                 ),
                 child: Text(
                   jawaban,
