@@ -23,13 +23,14 @@ class HalamanQuiz extends StatefulWidget {
   @override
   State<HalamanQuiz> createState() => _HalamanQuizState();
 }
+
 class Pertanyaan {
   String pertanyaan;
   List<String> jawaban;
   String kunciJawaban;
   String gambar;
 
-  Pertanyaan(this.pertanyaan, this.jawaban, this.kunciJawaban,this.gambar);
+  Pertanyaan(this.pertanyaan, this.jawaban, this.kunciJawaban, this.gambar);
 }
 
 class _HalamanQuizState extends State<HalamanQuiz> {
@@ -169,10 +170,12 @@ class _HalamanQuizState extends State<HalamanQuiz> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        Container(
-          color: Colors.white,
-          padding: EdgeInsets.all(25.0),
-          child: Text(
+    Container(
+    color: Colors.white,
+      padding: EdgeInsets.all(25.0),
+      child: Column(
+        children: [
+          Text(
             bankSoal[nomorPertanyaan].pertanyaan,
             textAlign: TextAlign.center,
             style: TextStyle(
@@ -180,45 +183,50 @@ class _HalamanQuizState extends State<HalamanQuiz> {
               color: Colors.black87,
             ),
           ),
-        ),
-        SizedBox(height: 6),
-        Image.asset(
-          bankSoal[nomorPertanyaan].gambar,
-          width: 150, // Sesuaikan ukuran gambar di sini
-          height: 150, // Sesuaikan ukuran gambar di sini
-          fit: BoxFit.contain,
-        ),
-        SizedBox(height: 10),
-        Column(
-          children: bankSoal[nomorPertanyaan].jawaban.map((jawaban) {
-            return Padding(
-              padding: EdgeInsets.symmetric(vertical: 5.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  pilihJawaban(jawaban);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.lightBlue,
-                  fixedSize: Size(400, 50), // Ukuran button tetap
-                ),
-                child: Text(
-                  jawaban,
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-        SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: skorMaba, // Menampilkan hasil jawaban
-        ),
-      ],
+          SizedBox(height: 6),
+          Image.asset(
+            bankSoal[nomorPertanyaan].gambar,
+            width: 150, // Sesuaikan ukuran gambar di sini
+            height: 150, // Sesuaikan ukuran gambar di sini
+            fit: BoxFit.contain,
+          ),
+        ],
+      ),
+    ),
+    SizedBox(height: 10),
+    Column(
+    children: bankSoal[nomorPertanyaan].jawaban.map((jawaban) {
+    return Padding(
+    padding: EdgeInsets.symmetric(vertical: 5.0),
+    child: ElevatedButton(
+    onPressed: () {
+    pilihJawaban(jawaban);
+    },
+    style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.lightBlue,
+    fixedSize: Size(400, 50), // Ukuran button tetap
+    ),
+    child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+    Text(
+    jawaban,
+    style: TextStyle(
+    fontSize: 20.0,
+    color: Colors.black,
+    ),
+    ),
+    if (skorMaba.length > nomorPertanyaan)
+    skorMaba[nomorPertanyaan],
+    ],
+    ),
+    ),
     );
-  }
+    }).toList(),
+    ),
+    SizedBox(height: 10),
+    // Bagian lain dari kode tidak perlu dimodifikasi
+    ],
+    );
+    }
 }
-
