@@ -23,6 +23,14 @@ class HalamanQuiz extends StatefulWidget {
   @override
   State<HalamanQuiz> createState() => _HalamanQuizState();
 }
+class Pertanyaan {
+  String pertanyaan;
+  List<String> jawaban;
+  String kunciJawaban;
+  String gambar;
+
+  Pertanyaan(this.pertanyaan, this.jawaban, this.kunciJawaban,this.gambar);
+}
 
 class _HalamanQuizState extends State<HalamanQuiz> {
   List<Widget> skorMaba = [];
@@ -214,11 +222,3 @@ class _HalamanQuizState extends State<HalamanQuiz> {
   }
 }
 
-class Pertanyaan {
-  String pertanyaan;
-  List<String> jawaban;
-  String kunciJawaban;
-  String gambar;
-
-  Pertanyaan(this.pertanyaan, this.jawaban, this.kunciJawaban,this.gambar);
-}
