@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:math'; // Import library dart:math untuk menggunakan fungsi pengacakan
+import 'dart:math';
 
 void main() {
   runApp(MyApp());
@@ -98,16 +98,18 @@ class _HalamanQuizState extends State<HalamanQuiz> {
     ),
   ];
   int nomorPertanyaan = 0;
-  int skor = 0;
+  int jawabanBenar = 0;
+  int jawabanSalah = 0;
+  int totalSkor = 0;
 
   @override
   void initState() {
     super.initState();
-    _acakSoal(); // Panggil fungsi pengacakan soal saat inisialisasi halaman
+    _acakSoal();
   }
 
   void _acakSoal() {
-    bankSoal.shuffle(Random()); // Mengacak urutan pertanyaan
+    bankSoal.shuffle(Random());
   }
 
   void pilihJawaban(String jawaban) {
@@ -119,7 +121,7 @@ class _HalamanQuizState extends State<HalamanQuiz> {
             color: Colors.green,
           ),
         );
-        skor += 10;
+        jawabanBenar++;
       } else {
         skorMaba.add(
           Icon(
@@ -127,7 +129,10 @@ class _HalamanQuizState extends State<HalamanQuiz> {
             color: Colors.red,
           ),
         );
+        jawabanSalah++;
       }
+
+      totalSkor = jawabanBenar * 10; // Total skor adalah jumlah jawaban benar dikali 10
 
       nomorPertanyaan++;
       if (nomorPertanyaan < bankSoal.length) {
@@ -144,16 +149,26 @@ class _HalamanQuizState extends State<HalamanQuiz> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: Colors.yellowAccent, // Mengubah warna latar belakang menjadi kuning cerah
           title: Text('Skor Akhir'),
-          content: Text('Skor Anda: $skor'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Benar: $jawabanBenar', style: TextStyle(color: Colors.black)),
+              Text('Salah: $jawabanSalah', style: TextStyle(color: Colors.black)),
+              Text('Total Skor: $totalSkor', style: TextStyle(color: Colors.black)),
+            ],
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 setState(() {
                   nomorPertanyaan = 0;
-                  skor = 0;
+                  jawabanBenar = 0;
+                  jawabanSalah = 0;
                   skorMaba.clear();
-                  _acakSoal(); // Panggil fungsi pengacakan soal kembali setelah permainan selesai
+                  totalSkor = 0;
+                  _acakSoal();
                 });
                 Navigator.of(context).pop();
               },
@@ -170,63 +185,82 @@ class _HalamanQuizState extends State<HalamanQuiz> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-    Container(
-    color: Colors.white,
-      padding: EdgeInsets.all(25.0),
-      child: Column(
-        children: [
-          Text(
-            bankSoal[nomorPertanyaan].pertanyaan,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 25.0,
-              color: Colors.black87,
-            ),
+        Container(
+          color: Colors.white,
+          padding: EdgeInsets.all(25.0),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Benar: $jawabanBenar',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.green,
+                    ),
+                  ),
+                  Text(
+                    'Salah: $jawabanSalah',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.red,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Text(
+                bankSoal[nomorPertanyaan].pertanyaan,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 25.0,
+                  color: Colors.black87,
+                ),
+              ),
+              SizedBox(height: 6),
+              Image.asset(
+                bankSoal[nomorPertanyaan].gambar,
+                width: 150,
+                height: 150,
+                fit: BoxFit.contain,
+              ),
+            ],
           ),
-          SizedBox(height: 6),
-          Image.asset(
-            bankSoal[nomorPertanyaan].gambar,
-            width: 150, // Sesuaikan ukuran gambar di sini
-            height: 150, // Sesuaikan ukuran gambar di sini
-            fit: BoxFit.contain,
-          ),
-        ],
-      ),
-    ),
-    SizedBox(height: 10),
-    Column(
-    children: bankSoal[nomorPertanyaan].jawaban.map((jawaban) {
-    return Padding(
-    padding: EdgeInsets.symmetric(vertical: 5.0),
-    child: ElevatedButton(
-    onPressed: () {
-    pilihJawaban(jawaban);
-    },
-    style: ElevatedButton.styleFrom(
-    backgroundColor: Colors.lightBlue,
-    fixedSize: Size(400, 50), // Ukuran button tetap
-    ),
-    child: Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-    Text(
-    jawaban,
-    style: TextStyle(
-    fontSize: 20.0,
-    color: Colors.black,
-    ),
-    ),
-    if (skorMaba.length > nomorPertanyaan)
-    skorMaba[nomorPertanyaan],
-    ],
-    ),
-    ),
+        ),
+        SizedBox(height: 10),
+        Column(
+          children: bankSoal[nomorPertanyaan].jawaban.map((jawaban) {
+            return Padding(
+              padding: EdgeInsets.symmetric(vertical: 5.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  pilihJawaban(jawaban);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.lightBlue,
+                  fixedSize: Size(400, 50),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      jawaban,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.black,
+                      ),
+                    ),
+                    if (skorMaba.length > nomorPertanyaan)
+                      skorMaba[nomorPertanyaan],
+                  ],
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+        SizedBox(height: 10),
+      ],
     );
-    }).toList(),
-    ),
-    SizedBox(height: 10),
-    // Bagian lain dari kode tidak perlu dimodifikasi
-    ],
-    );
-    }
+  }
 }
